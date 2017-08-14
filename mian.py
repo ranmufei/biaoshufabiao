@@ -114,7 +114,7 @@ def savemysql(sql):
 	
 	try:
 		#获取一个数据库连接，注意如果是UTF-8类型的，需要制定数据库
-		conn=pymysql.connect(host='www.17ni.me',user='root',passwd='^%cqsyy@#1xyd2xsyc6z',db='fabiao',port=3306,charset='utf8')
+		conn=pymysql.connect(host='www.1xxxx.me',user='root',passwd='xxxxx',db='fabiao',port=3306,charset='utf8')
 		cur=conn.cursor()#获取一个游标
 		cur.execute(sql)
 		cur.close()#关闭游标
