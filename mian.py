@@ -16,9 +16,19 @@ import mysqllib #数据库sql 模块
 # 采集湖北采购中心数据库写入 excel
 
 def main():
-		for a in range(1,4):
+		list=('http://www.ccgp-hubei.gov.cn/pages/html/szbnotice.html','http://www.ccgp-hubei.gov.cn/pages/html/xzbnotice.html')
+		
+		
+		'''
+		for ls in range(len(list)):
+			print(ls,list[ls])
+			
+		'''
+		#return
+		#for a in range(1,4):
+		for a in range(len(list)):
 			print('开始第页：',a)
-			link='http://www.ccgp-hubei.gov.cn/pages/html/szbnotice'+str(a)+'.html' 
+			link=list[a]   #'http://www.ccgp-hubei.gov.cn/pages/html/szbnotice'+str(a)+'.html' 
 			r = requests.get(link)
 			# 获取列表
 			#r = requests.get('http://www.ccgp-hubei.gov.cn/pages/html/xzbnotice.html')
