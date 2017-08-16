@@ -8,31 +8,30 @@ import time
 import re
 from openpyxl import Workbook
 import xlwt
+import hashlib
 import mysqllib #数据库sql 模块
 
 
 
 # 采集湖北采购中心数据库写入 excel
 
-def main():	
-	for a in range(1,4):
-		print('开始第页：',a)
-		link='http://www.ccgp-hubei.gov.cn/pages/html/xzbnotice'+str(a)+'.html'
-		r = requests.get(link)
-		# 获取列表
-		#r = requests.get('http://www.ccgp-hubei.gov.cn/pages/html/xzbnotice.html')
-		r.encoding='utf-8'
-		soup = BeautifulSoup(r.text,'html.parser')
-		lists=soup.select("#ulNo > li > a")
+def main():
+		for a in range(1,4):
+			print('开始第页：',a)
+			link='http://www.ccgp-hubei.gov.cn/pages/html/szbnotice'+str(a)+'.html' 
+			r = requests.get(link)
+			# 获取列表
+			#r = requests.get('http://www.ccgp-hubei.gov.cn/pages/html/xzbnotice.html')
+			r.encoding='utf-8'
+			soup = BeautifulSoup(r.text,'html.parser')
+			lists=soup.select("#ulNo > li > a")
 
-		#strinfo = re.compile()
+			#strinfo = re.compile()
 
-		for link in lists:
-			print(link.get('href'))
-			getcontent(link.get('href'))
-	
-	
-	
+			for link in lists:
+				print(link.get('href'))
+				getcontent(link.get('href'))
+
 		#print(link.string)
 	#getparam('ss')
 	#wtexcel(lists)
@@ -63,10 +62,24 @@ def wtexcel(lists):
 def getcontent(urls):
 	id,htmls=getparam(urls)
 	url='http://www.ccgp-hubei.gov.cn/fnoticeAction!findFNoticeInfoByGgid_n.action?queryInfo.GGID='+id+'&queryInfo.isHtmlPage='+htmls
-
-	r = requests.get(url)
-	r.encoding='utf-8'
-	soup = BeautifulSoup(r.text,'html.parser')
+	hash1=hashlib.md5()
+	hash1.update(url.encode('utf-8'))
+	hash_num=hash1.hexdigest()
+	
+	#print(hash_num)
+	#return 0
+	if isInto(hash_num) > 0 :
+		print('已经采集过过了')
+		return 
+		
+	try:
+		r = requests.get(url,timeout=6)
+		r.encoding='utf-8'
+		soup = BeautifulSoup(r.text,'html.parser')
+	except requests.RequestException as e:
+		print(e)
+		return
+	
 	#lists=soup.find_all('table')
 
 	title=soup.find_all('h1')
@@ -76,6 +89,7 @@ def getcontent(urls):
 	#print(title[0].string,':',content[0],':',cinfo[0].string,cinfo[1].string,cinfo[2].string,cinfo[3].string,cinfo[4].string)
 	try:
 		dictstr1={
+		"hash":hash_num,
 		"title":title[0].string,
 		"content":content[0],
 		"dates":time.strftime('%Y-%m-%d',time.localtime(time.time())),
@@ -87,6 +101,7 @@ def getcontent(urls):
 	except Exception as e:
 		print(e)
 		dictstr1={
+		"hash":hash_num,
 		"title":title[0].string,
 		"content":content[0],
 		"dates":time.strftime('%Y-%m-%d',time.localtime(time.time())),
@@ -99,7 +114,28 @@ def getcontent(urls):
 	sql=mysqllib.get_i_sql('bs_data',dictstr1)
 	print(sql)
 	savemysql(sql)
-
+	
+# 检查url hash是否存在
+# 返回 int
+def isInto(hashstr):
+	sql='SELECT id,hash,title FROM bs_data WHERE hash = "'+str(hashstr)+'"'
+	
+	try:
+		#获取一个数据库连接，注意如果是UTF-8类型的，需要制定数据库
+		conn=pymysql.connect(host='www.17ni.me',user='root',passwd='^%cqsyy@#1xyd2xsyc6z',db='fabiao',port=3306,charset='utf8')
+		cur=conn.cursor()#获取一个游标
+		cur.execute(sql)
+		ret = cur.fetchall()
+		cur.close()#关闭游标
+		conn.commit()
+		conn.close()#释放数据库资源
+		#print(len(ret))
+		return len(ret)
+	except  Exception as err:print(err)
+		
+	
+	
+	
 # 分析uri 放回 两个参数 供内容采集组合
 def getparam(str):
 	#str='fnoticeAction!findFNoticeInfoByGgid_n.action?queryInfo.GGID=c291Cb60aeVqJ5n3&queryInfo.isHtmlPage=htmlPage//201708//c291Cb60aeVqJ5n3.html'
