@@ -10,6 +10,7 @@ from openpyxl import Workbook
 import xlwt
 import hashlib
 import mysqllib #数据库sql 模块
+import time, os, sched 
 
 
 
@@ -160,7 +161,7 @@ def savemysql(sql):
 	
 	try:
 		#获取一个数据库连接，注意如果是UTF-8类型的，需要制定数据库
-		conn=pymysql.connect(host='www.1xxxx.me',user='root',passwd='xxxxx',db='fabiao',port=3306,charset='utf8')
+		conn=pymysql.connect(host='www.17ni.me',user='root',passwd='^%cqsyy@#1xyd2xsyc6z',db='fabiao',port=3306,charset='utf8')
 		cur=conn.cursor()#获取一个游标
 		cur.execute(sql)
 		cur.close()#关闭游标
@@ -168,6 +169,24 @@ def savemysql(sql):
 		conn.close()#释放数据库资源
 		print('保存成功！')
 	except  Exception :print("失败")
+
+# 第一个参数确定任务的时间，返回从某个特定的时间到现在经历的秒数 
+# 第二个参数以某种人为的方式衡量时间 
+schedule = sched.scheduler(time.time, time.sleep)     
+def perform_command(cmd, inc): 
+    # 安排inc秒后再次运行自己，即周期运行 
+    schedule.enter(inc, 0, perform_command, (cmd, inc)) 
+    #os.system(cmd) 
+    print('定时任务开始')
+    main()
+        
+def timming_exe(cmd, inc = 60): 
+    print('周期任务开始准备~~~~%s秒后开始执行'%(inc))
+    # enter用来安排某事件的发生时间，从现在起第n秒开始启动 
+    schedule.enter(inc, 0, perform_command, (cmd, inc)) 
+    # 持续运行，直到计划时间队列变成空为止 
+    schedule.run() 
    
 if __name__ == '__main__':
-	main()
+	#main()
+	timming_exe("echo %time%", 7200)

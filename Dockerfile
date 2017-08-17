@@ -40,6 +40,7 @@ RUN echo \
   # Install and upgrade Pip
   && easy_install pip \
   && pip install --upgrade pip \
+  && pip install  \
   && if [[ ! -e /usr/bin/pip ]]; then ln -sf /usr/bin/pip3 /usr/bin/pip; fi \
   && echo
 
