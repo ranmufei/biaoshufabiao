@@ -40,7 +40,7 @@ RUN echo \
   # Install and upgrade Pip
   && easy_install pip \
   && pip install --upgrade pip \
-  && pip install  \
+  && pip install beautifulsoup4 openpyxl requests urllib3 xlrd xlwt PyMySQL \
   && if [[ ! -e /usr/bin/pip ]]; then ln -sf /usr/bin/pip3 /usr/bin/pip; fi \
   && echo
 
