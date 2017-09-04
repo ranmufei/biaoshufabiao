@@ -1,0 +1,23 @@
+FROM python:2.7-alpine3.4
+
+# 开启容器 自动执行程序脚步 重点要设置目录 我进入执行
+
+MAINTAINER <ranmufei@qq.com>
+
+#COPY run.sh /
+
+#RUN  chmod 777 /run.sh
+
+COPY python "/python"
+
+
+RUN pip install \
+    requests \
+    urllib \
+    bs4
+
+
+WORKDIR /python
+
+ENTRYPOINT python './flashSale.py';'sh'
+#ENTRYPOINT sh -C './run.sh';'sh'
