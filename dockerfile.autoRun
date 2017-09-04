@@ -1,6 +1,6 @@
 FROM python:2.7-alpine3.4
 
-# 开启容器 自动执行程序脚步 重点要设置目录 我进入执行
+# 开启容器 自动执行程序脚步 重点要设置目录 我进入执行 
 
 MAINTAINER <ranmufei@qq.com>
 
