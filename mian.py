@@ -17,7 +17,9 @@ import time, os, sched
 # 采集湖北采购中心数据库写入 excel
 
 def main():
-		list=('http://www.ccgp-hubei.gov.cn/pages/html/szbnotice.html','http://www.ccgp-hubei.gov.cn/pages/html/xzbnotice.html')
+		list=('http://www.ccgp-hubei.gov.cn/pages/html/szbnotice.html',
+		'http://www.ccgp-hubei.gov.cn/pages/html/xzbnotice.html',
+		)
 		
 		
 		'''
