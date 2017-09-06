@@ -10,7 +10,7 @@ RUN  chmod 777 /run.sh
 
 # so next add cron
 
-RUN apk add cron && \
+RUN apk add crond && \
     rm -r /var/lib/apt/lists/*
 
 WORKDIR /
