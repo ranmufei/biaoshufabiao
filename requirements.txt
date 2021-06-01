@@ -4,7 +4,7 @@ openpyxl==2.4.8
 
 requests==2.18.3
 
-urllib3==1.22
+urllib3==1.26.5
 
 xlrd==1.0.0
 
